@@ -1,5 +1,6 @@
 import numpy as np
 import time
+from tqdm import tqdm
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score
@@ -111,7 +112,7 @@ class JointSelector(BaseModel):
         return accuracy_score(self.y_val, clf.predict(X_val_sel)), len(selected_indices)
 
     def run(self):
-        print(f"Starting Joint Optimization (Features + Hyperparams)...")
+        print(f"Starting Joint Optimization (Hybrids + Hyperparams Tuning)...")
         start_time = time.time()
         
         # Initial Eval
@@ -123,7 +124,8 @@ class JointSelector(BaseModel):
         self.gbest_pos = self.positions[best_idx].copy()
         self.gbest_score = scores[best_idx]
         
-        for iteration in range(self.n_iterations):
+        pbar = tqdm(range(self.n_iterations), desc="Joint Evolution")
+        for iteration in pbar:
             # PSO Update
             for i in range(self.n_particles):
                 r1, r2 = np.random.rand(), np.random.rand()
@@ -166,7 +168,7 @@ class JointSelector(BaseModel):
             self.history['accuracy'].append(best_acc)
             self.history['features'].append(best_feat_count)
             
-            print(f"Iter {iteration+1}/{self.n_iterations} | Best Fitness: {self.gbest_score:.4f} | Acc: {best_acc:.4f} | Feats: {best_feat_count}")
+            pbar.set_description(f"Gen {iteration+1} - Fit: {self.gbest_score:.4f} | Acc: {best_acc:.4f}")
         
         self.training_time = time.time() - start_time
         # Save best hyperparams for retrieval
@@ -175,7 +177,7 @@ class JointSelector(BaseModel):
     def get_best_features(self):
         best_indices, _ = self.decode_particle(self.gbest_pos)
         feature_names_selected = [self.feature_names[i] for i in best_indices]
-        return best_indices, feature_names_selected, self.history, self.training_time
+        return best_indices, feature_names_selected, self.gbest_score, self.training_time
 
     def get_best_hyperparams(self):
         return self.best_hyperparams

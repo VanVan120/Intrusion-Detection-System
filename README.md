@@ -136,7 +136,7 @@ Standard feature selection fixes the classifier settings (e.g., Default Decision
 </details>
 
 ---
-## � Visualizations
+## Visualizations
 
 After running the **Analysis** step (`python main.py --mode compare`), the system generates the following insight graphs in `results/plots/`.
 
@@ -154,7 +154,7 @@ After running the **Analysis** step (`python main.py --mode compare`), the syste
 
 ---
 
-## �📋 Prerequisites
+## 📋 Prerequisites
 
 Before you begin, ensure you have the following installed on your computer:
 *   **Python 3.8 or higher**: [Download Python](https://www.python.org/downloads/)

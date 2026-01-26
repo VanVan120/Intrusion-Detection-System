@@ -1,11 +1,11 @@
 {
     "Method": "HYBRID",
-    "Accuracy": 0.9980561726436052,
-    "Precision": 0.9980563600840864,
-    "Recall": 0.9980561726436052,
-    "F1-Score": 0.9980562635755311,
-    "Detection Rate (TPR)": 0.9943628890193775,
-    "False Positive Rate (FPR)": 0.0011932889429846544,
-    "Feature Count": 38,
-    "Runtime (s)": 130.06269454956055
+    "Accuracy": 0.998274357346874,
+    "Precision": 0.9982735427844591,
+    "Recall": 0.998274357346874,
+    "F1-Score": 0.9982738320280847,
+    "Detection Rate (TPR)": 0.994128009395185,
+    "False Positive Rate (FPR)": 0.0008830338178086442,
+    "Feature Count": 29,
+    "Runtime (s)": 109.24587440490723
 }

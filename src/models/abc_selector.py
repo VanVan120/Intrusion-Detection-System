@@ -32,6 +32,20 @@ class ABCSelector(BaseModel):
         fitness = acc + 0.001 * (1 - (len(selected_indices)/len(solution)))
         return fitness
 
+    def _evaluate_metric(self, solution):
+        """Helper to calculate accuracy/features for history tracking."""
+        selected_indices = np.where(solution > 0.5)[0]
+        if len(selected_indices) == 0:
+            return 0.0, 0
+            
+        X_sub_sel = self.X_sub[:, selected_indices]
+        X_val_sel = self.X_val[:, selected_indices]
+        
+        clf = DecisionTreeClassifier(random_state=42)
+        clf.fit(X_sub_sel, self.y_sub)
+        acc = clf.score(X_val_sel, self.y_val)
+        return acc, len(selected_indices)
+
     def run(self):
         colony_size = self.config['abc']['colony_size']
         n_dim = self.X_train.shape[1]
@@ -49,8 +63,10 @@ class ABCSelector(BaseModel):
         print("Starting ABC Optimization...")
         start_time = time.time()
         
-        for it in tqdm(range(self.config['abc']['n_iterations']), desc="ABC Evolution"):
-            # 1. Employed Bees
+        pbar = tqdm(range(self.config['abc']['n_iterations']), desc="ABC Evolution")
+        for it in pbar:
+            # 1. Employed Bees (Parallelized Phase)
+            candidates = []
             for i in range(colony_size):
                 k = np.random.randint(colony_size)
                 while k == i: k = np.random.randint(colony_size)
@@ -60,40 +76,46 @@ class ABCSelector(BaseModel):
                 new_solution = foods[i].copy()
                 new_solution[j] = foods[i][j] + phi * (foods[i][j] - foods[k][j])
                 new_solution = np.clip(new_solution, 0, 1)
-                
-                new_fit = self.calculate_fitness(new_solution)
-                
-                if new_fit > fitness[i]:
-                    foods[i] = new_solution
-                    fitness[i] = new_fit
+                candidates.append(new_solution)
+            
+            # Evaluate all employed candidates in parallel
+            new_fits = Parallel(n_jobs=self.n_jobs)(delayed(self.calculate_fitness)(c) for c in candidates)
+            
+            for i in range(colony_size):
+                if new_fits[i] > fitness[i]:
+                    foods[i] = candidates[i]
+                    fitness[i] = new_fits[i]
                     trial[i] = 0
                 else:
                     trial[i] += 1
             
-            # 2. Onlooker Bees
+            # 2. Onlooker Bees (Parallelized Phase)
             prob = fitness / fitness.sum()
-            t = 0
-            i = 0
-            while t < colony_size:
-                if np.random.rand() < prob[i]:
-                    t += 1
-                    k = np.random.randint(colony_size)
-                    while k == i: k = np.random.randint(colony_size)
-                    j = np.random.randint(n_dim)
-                    
-                    phi = np.random.uniform(-1, 1)
-                    new_solution = foods[i].copy()
-                    new_solution[j] = foods[i][j] + phi * (foods[i][j] - foods[k][j])
-                    new_solution = np.clip(new_solution, 0, 1)
-                    
-                    new_fit = self.calculate_fitness(new_solution)
-                    if new_fit > fitness[i]:
-                        foods[i] = new_solution
-                        fitness[i] = new_fit
-                        trial[i] = 0
-                    else:
-                        trial[i] += 1
-                i = (i + 1) % colony_size
+            # Select food sources probabilistically (some might be selected multiple times)
+            selected_indices = np.random.choice(colony_size, colony_size, p=prob)
+            
+            onlooker_cands = []
+            for i in selected_indices:
+                k = np.random.randint(colony_size)
+                while k == i: k = np.random.randint(colony_size)
+                j = np.random.randint(n_dim)
+                
+                phi = np.random.uniform(-1, 1)
+                new_solution = foods[i].copy()
+                new_solution[j] = foods[i][j] + phi * (foods[i][j] - foods[k][j])
+                new_solution = np.clip(new_solution, 0, 1)
+                onlooker_cands.append(new_solution)
+                
+            # Evaluate all onlooker candidates in parallel
+            on_fits = Parallel(n_jobs=self.n_jobs)(delayed(self.calculate_fitness)(c) for c in onlooker_cands)
+            
+            for idx, i_source in enumerate(selected_indices):
+                if on_fits[idx] > fitness[i_source]:
+                    foods[i_source] = onlooker_cands[idx]
+                    fitness[i_source] = on_fits[idx]
+                    trial[i_source] = 0
+                else:
+                    trial[i_source] += 1
                 
             # 3. Scout Bees
             max_trial_idx = np.argmax(trial)
@@ -109,8 +131,13 @@ class ABCSelector(BaseModel):
                 self.best_fitness = fitness[curr_best_idx]
                 
             # Track
+            best_acc, best_feat = self._evaluate_metric(self.best_solution)
             self.history['iteration'].append(it)
             self.history['fitness'].append(self.best_fitness)
+            self.history['accuracy'].append(best_acc)
+            self.history['features'].append(best_feat)
+            
+            pbar.set_description(f"Gen {it+1} - Fit: {self.best_fitness:.4f} | Acc: {best_acc:.4f}")
             
         self.training_time = time.time() - start_time
         

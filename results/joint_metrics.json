@@ -1,11 +1,11 @@
 {
-    "Method": "Joint Optimization",
-    "Accuracy": 0.998591716915265,
-    "Precision": 0.9985917841957829,
-    "Recall": 0.998591716915265,
-    "F1-Score": 0.9985917498574189,
-    "Detection Rate (TPR)": 0.9958896065766295,
-    "False Positive Rate (FPR)": 0.000859168038948951,
-    "Feature Count": 27,
-    "Runtime (s)": 186.89805674552917
+    "Method": "JOINT",
+    "Accuracy": 0.9986115518882894,
+    "Precision": 0.998612340514486,
+    "Recall": 0.9986115518882894,
+    "F1-Score": 0.9986118764458974,
+    "Detection Rate (TPR)": 0.9964768056371109,
+    "False Positive Rate (FPR)": 0.0009546311543877235,
+    "Feature Count": 30,
+    "Runtime (s)": 484.20254254341125
 }

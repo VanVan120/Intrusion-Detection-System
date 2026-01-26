@@ -1,11 +1,11 @@
 {
-    "Method": "Particle Swarm Optimization (PSO)",
-    "Accuracy": 0.9972231037765789,
-    "Precision": 0.9972245410203151,
-    "Recall": 0.9972231037765789,
-    "F1-Score": 0.9972237528917948,
-    "Detection Rate (TPR)": 0.9923664122137404,
-    "False Positive Rate (FPR)": 0.0017899334144769814,
-    "Feature Count": 7,
-    "Runtime (s)": 170.38485980033875
+    "Method": "PSO",
+    "Accuracy": 0.9983735322119962,
+    "Precision": 0.9983735322119962,
+    "Recall": 0.9983735322119962,
+    "F1-Score": 0.9983735322119962,
+    "Detection Rate (TPR)": 0.9951849677040516,
+    "False Positive Rate (FPR)": 0.0009784969332474166,
+    "Feature Count": 49,
+    "Runtime (s)": 186.2303695678711
 }

@@ -16,6 +16,19 @@ class PSOSelector(BaseModel):
         )
         self.n_jobs = os.cpu_count()
 
+    def _evaluate_metric(self, m):
+        """Helper to calculate accuracy for a specific particle needed for history tracking."""
+        if np.count_nonzero(m) == 0:
+            return 0.0, 0
+            
+        X_sub_sel = self.X_sub[:, m == 1]
+        X_val_sel = self.X_val[:, m == 1]
+        
+        clf = DecisionTreeClassifier(random_state=42)
+        clf.fit(X_sub_sel, self.y_sub)
+        acc = clf.score(X_val_sel, self.y_val)
+        return acc, np.count_nonzero(m)
+
     def f_per_particle(self, m, alpha=0.9):
         """Computes fitness for a single particle."""
         if np.count_nonzero(m) == 0:
@@ -39,15 +52,35 @@ class PSOSelector(BaseModel):
         # Pyswarms provides continuous values, threshold at 0.5
         m = (x > 0.5)
         
-        # Parallel evaluation
+        # Parallel evaluation of Cost
         j = Parallel(n_jobs=self.n_jobs)(delayed(self.f_per_particle)(m[i], alpha) for i in range(n_particles))
-        return np.array(j)
+        j = np.array(j)
+        
+        # Capture history (Best of this iteration)
+        best_idx = np.argmin(j)
+        best_m = m[best_idx]
+        
+        # We re-evaluate metrics for the best particle to store exact accuracy/features 
+        # (small overhead: 1 extra training per generation)
+        acc, feat_count = self._evaluate_metric(best_m)
+        
+        self.history['accuracy'].append(acc)
+        self.history['features'].append(feat_count)
+        self.history['fitness'].append(j[best_idx])
+        iter_num = len(self.history['iteration']) + 1
+        self.history['iteration'].append(iter_num)
+        
+        print(f"Gen {iter_num} - Best Fit: {j[best_idx]:.4f} | Acc: {acc:.4f} | Feat: {feat_count}")
+        
+        return j
 
     def run(self):
         options = {
             'c1': self.config['pso']['c1'], 
             'c2': self.config['pso']['c2'], 
-            'w': self.config['pso']['w']
+            'w': self.config['pso']['w'],
+            'k': self.config['pso'].get('k', 5),
+            'p': self.config['pso'].get('p', 2)
         }
         dims = self.X_train.shape[1]
         
@@ -65,16 +98,14 @@ class PSOSelector(BaseModel):
         cost, pos = optimizer.optimize(
             self.f, 
             iters=self.config['pso']['n_iterations'],
-            verbose=True
+            verbose=False
         )
         
         self.training_time = time.time() - start_time
         self.best_pos = pos
         self.best_cost = cost
         
-        # Extract history from optimizer.cost_history
-        self.history['fitness'] = optimizer.cost_history
-        self.history['iteration'] = list(range(len(optimizer.cost_history)))
+        # History is now populated inside f()
         
     def get_best_features(self):
         selected_indices = [i for i, x in enumerate(self.best_pos) if x == 1]

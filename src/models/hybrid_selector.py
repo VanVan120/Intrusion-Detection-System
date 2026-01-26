@@ -32,6 +32,20 @@ class HybridSelector(BaseModel):
         fitness = acc + 0.001 * (1 - (len(selected_indices)/len(particle)))
         return fitness
 
+    def _evaluate_metric(self, particle):
+        """Helper to calculate accuracy/features for history tracking."""
+        selected_indices = np.where(particle > 0.5)[0]
+        if len(selected_indices) == 0:
+            return 0.0, 0
+            
+        X_sub_sel = self.X_sub[:, selected_indices]
+        X_val_sel = self.X_val[:, selected_indices]
+        
+        clf = DecisionTreeClassifier(random_state=42)
+        clf.fit(X_sub_sel, self.y_sub)
+        acc = clf.score(X_val_sel, self.y_val)
+        return acc, len(selected_indices)
+
     def run(self):
         n_particles = self.params['n_particles']
         n_iterations = self.params['n_iterations']
@@ -52,7 +66,8 @@ class HybridSelector(BaseModel):
         print("Starting Hybrid PSO-GA Optimization...")
         start_time = time.time()
         
-        for it in tqdm(range(n_iterations), desc="Hybrid Evolution"):
+        pbar = tqdm(range(n_iterations), desc="Hybrid Evolution")
+        for it in pbar:
             # 1. PSO Update
             for i in range(n_particles):
                 r1, r2 = np.random.rand(), np.random.rand()
@@ -86,8 +101,13 @@ class HybridSelector(BaseModel):
                     gbest_idx = i # Update index
             
             # Record
+            best_acc, best_feat = self._evaluate_metric(gbest_pos)
             self.history['iteration'].append(it)
             self.history['fitness'].append(gbest_score)
+            self.history['accuracy'].append(best_acc)
+            self.history['features'].append(best_feat)
+            
+            pbar.set_description(f"Gen {it+1} - Fit: {gbest_score:.4f} | Acc: {best_acc:.4f}")
             
         self.training_time = time.time() - start_time
         self.best_pos = gbest_pos

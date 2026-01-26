@@ -10,7 +10,7 @@ def load_config(config_path='config/config.yaml'):
     with open(config_path, 'r') as f:
         return yaml.safe_load(f)
 
-def run_feature_selection(method, config, df_split):
+def run_feature_selection(method, config, df_split, show_plots=True):
     X_train, X_test, y_train, y_test, feature_names = df_split
     
     optimizers = {
@@ -68,7 +68,7 @@ def run_feature_selection(method, config, df_split):
     plot_pareto_front(optimizer.history, len(best_names), best_fit, 
                       title=f"{method.upper()} Optimization History",
                       save_path=f"results/plots/{method}_history.png",
-                      show=(method != 'all'))
+                      show=show_plots)
 
 def main():
     parser = argparse.ArgumentParser(description="IDS Feature Selection Framework")
@@ -92,9 +92,11 @@ def main():
         
         if args.method == 'all':
             for m in ['ga', 'pso', 'abc', 'hybrid', 'joint']:
-                run_feature_selection(m, config, data_split)
+                # Run all without blocking plots
+                run_feature_selection(m, config, data_split, show_plots=False)
         else:
-            run_feature_selection(args.method, config, data_split)
+            # Run single with blocking plot
+            run_feature_selection(args.method, config, data_split, show_plots=True)
 
     elif args.mode == 'compare':
         run_analysis()
@@ -103,7 +105,8 @@ def main():
         loader.load_and_preprocess()
         data_split = loader.get_data_split()
         for m in ['ga', 'pso', 'abc', 'hybrid', 'joint']:
-            run_feature_selection(m, config, data_split)
+            # Run all without blocking plots
+            run_feature_selection(m, config, data_split, show_plots=False)
 
 if __name__ == "__main__":
     main()
