@@ -1,0 +1,11 @@
+{
+    "Model": "Baseline Decision Tree",
+    "Accuracy": 0.9981553475087274,
+    "Precision": 0.9981556189159395,
+    "Recall": 0.9981553475087274,
+    "F1-Score": 0.9981554769376085,
+    "Detection Rate (TPR)": 0.9947152084556665,
+    "False Positive Rate (FPR)": 0.0011455573852652682,
+    "Feature Count": 77,
+    "Training Time (s)": 7.433095693588257
+}

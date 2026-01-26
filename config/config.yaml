@@ -1,0 +1,41 @@
+data:
+  raw_path: "data/raw"
+  processed_path: "data/processed/processed_cicids2017.csv"
+  test_size: 0.2
+  random_state: 42
+  sample_fraction: 0.1
+
+model:
+  decision_tree:
+    criterion: "entropy"
+    random_state: 42
+    max_depth: null
+
+ga:
+  population_size: 20
+  num_generations: 10
+  mutation_percent_genes: 10
+
+pso:
+  n_particles: 15
+  n_iterations: 10
+  c1: 0.5
+  c2: 0.3
+  w: 0.9
+
+abc:
+  colony_size: 20
+  n_iterations: 10
+  limit: 3
+
+hybrid:
+  n_particles: 20
+  n_iterations: 10
+  w: 0.729
+  c1: 1.49445
+  c2: 1.49445
+
+joint:
+  n_particles: 30
+  n_iterations: 20
+  alpha: 0.002

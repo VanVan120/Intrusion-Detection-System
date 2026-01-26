@@ -1,0 +1,11 @@
+{
+    "Method": "Artificial Bee Colony (ABC)",
+    "Accuracy": 0.9975801332910187,
+    "Precision": 0.9975793161877337,
+    "Recall": 0.9975801332910187,
+    "F1-Score": 0.9975796801394917,
+    "Detection Rate (TPR)": 0.9923664122137404,
+    "False Positive Rate (FPR)": 0.0013603493950025058,
+    "Feature Count": 30,
+    "Runtime (s)": 405.7439992427826
+}

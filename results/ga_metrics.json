@@ -1,0 +1,11 @@
+{
+    "Method": "GA",
+    "Accuracy": 0.9966280545858458,
+    "Precision": 0.9966266148000583,
+    "Recall": 0.9966280545858458,
+    "F1-Score": 0.9966272651638413,
+    "Detection Rate (TPR)": 0.9894304169113329,
+    "False Positive Rate (FPR)": 0.001909262308775447,
+    "Feature Count": 24,
+    "Runtime (s)": 216.9814682006836
+}
