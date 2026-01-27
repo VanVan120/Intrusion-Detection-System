@@ -1,11 +1,11 @@
 {
     "Method": "ABC",
-    "Accuracy": 0.9983140272929228,
-    "Precision": 0.998315522670378,
-    "Recall": 0.9983140272929228,
-    "F1-Score": 0.9983146182247394,
-    "Detection Rate (TPR)": 0.9958896065766295,
-    "False Positive Rate (FPR)": 0.0011932889429846544,
-    "Feature Count": 35,
-    "Runtime (s)": 279.6587779521942
+    "Accuracy": 0.9981156775626785,
+    "Precision": 0.9981159545354429,
+    "Recall": 0.9981156775626785,
+    "F1-Score": 0.9981158097749766,
+    "Detection Rate (TPR)": 0.9945977686435702,
+    "False Positive Rate (FPR)": 0.0011694231641249612,
+    "Feature Count": 42,
+    "Runtime (s)": 206.52823734283447
 }

@@ -1,11 +1,11 @@
 {
     "Method": "JOINT",
-    "Accuracy": 0.9986115518882894,
-    "Precision": 0.998612340514486,
-    "Recall": 0.9986115518882894,
-    "F1-Score": 0.9986118764458974,
-    "Detection Rate (TPR)": 0.9964768056371109,
-    "False Positive Rate (FPR)": 0.0009546311543877235,
+    "Accuracy": 0.9985520469692161,
+    "Precision": 0.9985533756871349,
+    "Recall": 0.9985520469692161,
+    "F1-Score": 0.9985525544753645,
+    "Detection Rate (TPR)": 0.9965942454492073,
+    "False Positive Rate (FPR)": 0.0010500942698264957,
     "Feature Count": 30,
-    "Runtime (s)": 484.20254254341125
+    "Runtime (s)": 413.5389504432678
 }

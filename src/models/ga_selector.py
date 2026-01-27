@@ -26,7 +26,8 @@ def calculate_fitness(ga_instance, solution, solution_idx):
     X_train_sel = X_train_fold[:, selected_indices]
     X_val_sel = X_val_fold[:, selected_indices]
     
-    clf = DecisionTreeClassifier(random_state=42)
+    # Use standard entropy to match baseline
+    clf = DecisionTreeClassifier(criterion='entropy', random_state=42)
     clf.fit(X_train_sel, y_sub_train_global)
     accuracy = clf.score(X_val_sel, y_sub_val_global)
     
@@ -55,7 +56,7 @@ def on_generation_callback(ga_instance):
     if len(selected_indices) > 0:
         X_train_sel = X_train_fold[:, selected_indices]
         X_val_sel = X_val_fold[:, selected_indices]
-        clf = DecisionTreeClassifier(random_state=42)
+        clf = DecisionTreeClassifier(criterion='entropy', random_state=42)
         clf.fit(X_train_sel, y_sub_train_global)
         acc = clf.score(X_val_sel, y_sub_val_global)
 

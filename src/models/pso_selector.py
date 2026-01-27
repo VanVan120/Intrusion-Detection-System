@@ -24,7 +24,7 @@ class PSOSelector(BaseModel):
         X_sub_sel = self.X_sub[:, m == 1]
         X_val_sel = self.X_val[:, m == 1]
         
-        clf = DecisionTreeClassifier(random_state=42)
+        clf = DecisionTreeClassifier(criterion='entropy', random_state=42)
         clf.fit(X_sub_sel, self.y_sub)
         acc = clf.score(X_val_sel, self.y_val)
         return acc, np.count_nonzero(m)
@@ -37,13 +37,14 @@ class PSOSelector(BaseModel):
         X_sub_sel = self.X_sub[:, m == 1]
         X_val_sel = self.X_val[:, m == 1]
         
-        clf = DecisionTreeClassifier(random_state=42)
+        clf = DecisionTreeClassifier(criterion='entropy', random_state=42)
         clf.fit(X_sub_sel, self.y_sub)
         acc = clf.score(X_val_sel, self.y_val)
         
         # Fitness: Weighted sum of error rate and feature ratio
         # Minimize J = alpha * (1 - Acc) + (1 - alpha) * (feat / total)
-        j = (alpha * (1.0 - acc)) + ((1.0 - alpha) * (1 - (X_sub_sel.shape[1] / self.X_sub.shape[1])))
+        # Corrected: We want to Minimize Feature Count (Ratio), not (1-Ratio)
+        j = (alpha * (1.0 - acc)) + ((1.0 - alpha) * (X_sub_sel.shape[1] / self.X_sub.shape[1]))
         return j
 
     def f(self, x, alpha=0.9):

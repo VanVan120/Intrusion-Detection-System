@@ -24,7 +24,7 @@ class HybridSelector(BaseModel):
         X_sub_sel = self.X_sub[:, selected_indices]
         X_val_sel = self.X_val[:, selected_indices]
         
-        clf = DecisionTreeClassifier(random_state=42)
+        clf = DecisionTreeClassifier(criterion='entropy', random_state=42)
         clf.fit(X_sub_sel, self.y_sub)
         acc = clf.score(X_val_sel, self.y_val)
         
@@ -41,7 +41,7 @@ class HybridSelector(BaseModel):
         X_sub_sel = self.X_sub[:, selected_indices]
         X_val_sel = self.X_val[:, selected_indices]
         
-        clf = DecisionTreeClassifier(random_state=42)
+        clf = DecisionTreeClassifier(criterion='entropy', random_state=42)
         clf.fit(X_sub_sel, self.y_sub)
         acc = clf.score(X_val_sel, self.y_val)
         return acc, len(selected_indices)

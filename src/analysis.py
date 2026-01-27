@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 
-def run_analysis():
+def run_analysis(show_plots=True):
     print("\n--- Running Final Performance Analysis ---")
     sns.set_style("whitegrid")
     
@@ -81,7 +81,10 @@ def run_analysis():
         ax.bar_label(container, fmt='%.4f', padding=4, rotation=90, fontsize=9)
     plt.tight_layout()
     plt.savefig('results/plots/1_general_metrics.png')
-    plt.show()
+    if show_plots:
+        plt.show()
+    else:
+        plt.close()
 
     # 2. Security Metrics
     print("Displaying Security Metrics Plot...")
@@ -105,7 +108,10 @@ def run_analysis():
     ax2.bar_label(rects2, fmt='%.4f', padding=3, fontsize=10)
     plt.tight_layout()
     plt.savefig('results/plots/2_security_metrics.png')
-    plt.show()
+    if show_plots:
+        plt.show()
+    else:
+        plt.close()
 
     # 3. Feature Reduction
     print("Displaying Feature Reduction Analysis...")
@@ -128,7 +134,10 @@ def run_analysis():
         ax2.annotate(f"{txt:.1f}%", (i, txt), textcoords="offset points", xytext=(0, 12), ha='center', color='#e31a1c', fontweight='bold', bbox=dict(boxstyle="round,pad=0.3", fc="white", ec='#e31a1c', lw=1))
     plt.tight_layout()
     plt.savefig('results/plots/3_feature_reduction.png')
-    plt.show()
+    if show_plots:
+        plt.show()
+    else:
+        plt.close()
 
     # 4. Computational Cost
     print("Displaying Computational Cost Analysis...")
@@ -143,7 +152,10 @@ def run_analysis():
         plt.text(bar.get_x() + bar.get_width()/2., height, f'{height:.1f}s', ha='center', va='bottom', fontsize=11, fontweight='bold')
     plt.tight_layout()
     plt.savefig('results/plots/4_runtime_comparison.png')
-    plt.show()
+    if show_plots:
+        plt.show()
+    else:
+        plt.close()
 
     # 5. Pareto Front
     print("Displaying Pareto Frontier...")
@@ -181,4 +193,7 @@ def run_analysis():
     plt.legend(bbox_to_anchor=(1.02, 1), loc='upper left', title='Optimization Method', fontsize=12, frameon=True, shadow=True)
     plt.tight_layout()
     plt.savefig('results/plots/5_pareto_frontier.png')
-    plt.show()
+    if show_plots:
+        plt.show()
+    else:
+        plt.close()

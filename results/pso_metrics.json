@@ -1,11 +1,11 @@
 {
     "Method": "PSO",
-    "Accuracy": 0.9983735322119962,
-    "Precision": 0.9983735322119962,
-    "Recall": 0.9983735322119962,
-    "F1-Score": 0.9983735322119962,
-    "Detection Rate (TPR)": 0.9951849677040516,
-    "False Positive Rate (FPR)": 0.0009784969332474166,
-    "Feature Count": 49,
-    "Runtime (s)": 186.2303695678711
+    "Accuracy": 0.99718343383053,
+    "Precision": 0.9971855490892205,
+    "Recall": 0.99718343383053,
+    "F1-Score": 0.997184355291362,
+    "Detection Rate (TPR)": 0.9924838520258368,
+    "False Positive Rate (FPR)": 0.0018615307510560608,
+    "Feature Count": 28,
+    "Runtime (s)": 93.34768080711365
 }

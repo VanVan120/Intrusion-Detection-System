@@ -1,11 +1,11 @@
 {
     "Method": "GA",
-    "Accuracy": 0.9979371628054586,
-    "Precision": 0.997938520418037,
-    "Recall": 0.9979371628054586,
-    "F1-Score": 0.9979377413565401,
-    "Detection Rate (TPR)": 0.9945977686435702,
-    "False Positive Rate (FPR)": 0.001384215173862199,
-    "Feature Count": 33,
-    "Runtime (s)": 215.18309330940247
+    "Accuracy": 0.9977189781021898,
+    "Precision": 0.9977208901284857,
+    "Recall": 0.9977189781021898,
+    "F1-Score": 0.997719777598177,
+    "Detection Rate (TPR)": 0.994128009395185,
+    "False Positive Rate (FPR)": 0.0015512756258800507,
+    "Feature Count": 30,
+    "Runtime (s)": 145.65943884849548
 }

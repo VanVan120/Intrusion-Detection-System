@@ -208,12 +208,13 @@ Run specific optimization algorithms to find the best feature subsets.
 
 | Algorithm | Command | Description |
 | :--- | :--- | :--- |
+| **Baseline** | `python main.py --mode train --method baseline` | Standard Decision Tree on ALL features (Control). |
 | **Genetic Algorithm** | `python main.py --mode train --method ga` | Biological evolution simulation. Good balance. |
 | **PSO** | `python main.py --mode train --method pso` | Particle Swarm. Fast convergence, high reduction. |
 | **ABC** | `python main.py --mode train --method abc` | Artificial Bee Colony. Good at avoiding local optima. |
 | **Hybrid PSO-GA** | `python main.py --mode train --method hybrid` | Combines PSO speed with GA diversity. |
 | **Joint Opt** | `python main.py --mode train --method joint` | **Best Accuracy**. Optimizes Features + Tree Params. |
-| **Run ALL** | `python main.py --mode all` | Runs all methods sequentially (Good for overnight). |
+| **Run ALL** | `python main.py --mode all` | Runs Baseline + All methods sequentially. |
 
 ### 5️⃣ Compare Results & Visualize
 
