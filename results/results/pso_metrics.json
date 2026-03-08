@@ -1,0 +1,11 @@
+{
+    "Method": "Particle Swarm Optimization (PSO)",
+    "Accuracy": 0.997500793398921,
+    "Precision": 0.9975023955579522,
+    "Recall": 0.997500793398921,
+    "F1-Score": 0.997501494335808,
+    "Detection Rate (TPR)": 0.9933059307105109,
+    "False Positive Rate (FPR)": 0.001646738741318823,
+    "Feature Count": 5,
+    "Runtime (s)": 138.48535871505737
+}

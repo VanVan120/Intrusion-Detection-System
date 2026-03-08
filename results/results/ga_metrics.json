@@ -1,0 +1,11 @@
+{
+    "Method": "Genetic Algorithm (GA)",
+    "Accuracy": 0.9981156775626785,
+    "Precision": 0.9981152714663969,
+    "Recall": 0.9981156775626785,
+    "F1-Score": 0.9981154570735229,
+    "Detection Rate (TPR)": 0.994128009395185,
+    "False Positive Rate (FPR)": 0.0010739600486861889,
+    "Feature Count": 25,
+    "Runtime (s)": 1297.0397877693176
+}
