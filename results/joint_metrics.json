@@ -1,0 +1,11 @@
+{
+    "Method": "Joint Optimization",
+    "Accuracy": 0.9983933671850206,
+    "Precision": 0.998395046100232,
+    "Recall": 0.9983933671850206,
+    "F1-Score": 0.9983940052934934,
+    "Detection Rate (TPR)": 0.9962419260129184,
+    "False Positive Rate (FPR)": 0.0011694231641249612,
+    "Feature Count": 30,
+    "Runtime (s)": 219.88153791427612
+}

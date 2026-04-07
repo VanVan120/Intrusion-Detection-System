@@ -49,17 +49,17 @@ The following results demonstrate the system's performance using **10% of the CI
 
 | Method | Accuracy | Precision | Recall | F1-Score | Selected Features | Reduction % | Training Time |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Baseline (Decision Tree)** | 99.82% | 99.82% | 99.82% | 99.82% | 69 (All) | 0% | ~6s |
-| **Genetic Algorithm (GA)** | 99.81% | 99.81% | 99.81% | 99.81% | 25 | 63.8% | ~1297s |
-| **PSO** | 99.75% | 99.75% | 99.75% | 99.75% | **5** | **92.8%** | ~138s |
-| **Artificial Bee Colony (ABC)** | 99.81% | 99.81% | 99.81% | 99.81% | 42 | 39.1% | ~207s |
-| **Hybrid PSO-GA** 🏆 | **99.87%** | **99.87%** | **99.87%** | **99.87%** | 29 | 58.0% | **~72s** |
-| **Joint Optimization** | 99.86% | 99.86% | 99.86% | 99.86% | 30 | 56.5% | ~414s |
+| **Baseline (Decision Tree)** | 99.82% | 99.82% | 99.82% | 99.82% | 77 (All) | 0% | ~6s |
+| **Genetic Algorithm (GA)** | 99.76% | 99.76% | 99.76% | 99.76% | 27 | 64.9% | ~359s |
+| **PSO** | 99.75% | 99.75% | 99.75% | 99.75% | 5 | 93.5% | ~138s |
+| **Artificial Bee Colony (ABC)** | 99.81% | 99.81% | 99.81% | 99.81% | 30 | 61.0% | ~405s |
+| **Hybrid PSO-GA** 🏆 | **99.84%** | **99.84%** | **99.84%** | **99.84%** | **47** | **38.9%** | **~184s** |
+| **Joint Optimization** | 99.83% | 99.83% | 99.83% | 99.83% | 30 | 61.0% | ~219s |
 
 > **Analyst Notes**:
-> *   **PSO** offers the most aggressive feature reduction (using only **5 features** out of 69!) with 92.8% reduction while maintaining 99.75% accuracy.
-> *   **Hybrid PSO-GA** achieves the highest accuracy (99.87%) — surpassing even the Baseline — while using less than half the features and being the fastest optimizer (~72s).
-> *   **Joint Optimization** (Feature + Hyperparameter tuning) reaches 99.86% accuracy by co-optimizing Decision Tree parameters alongside features.
+> *   **PSO** offers the most aggressive feature reduction (using only **5 features** out of 77!) with 93.5% reduction while maintaining 99.75% accuracy.
+> *   **Hybrid PSO-GA** achieves the highest accuracy (99.84%) — surpassing even the Baseline — while using less than half the features and being the fastest optimizer (~184s).
+> *   **Joint Optimization** (Feature + Hyperparameter tuning) reaches 99.83% accuracy by co-optimizing Decision Tree parameters alongside features.
 
 ---
 
@@ -156,7 +156,7 @@ Standard feature selection fixes the classifier settings (e.g., default Decision
 *   **Solution**: We optimize a single extended particle vector containing **BOTH** features and hyperparameters:
 
     ```
-    Particle = [ F_1, F_2, ... F_69 | Max_Depth, Min_Samples_Split, Criterion ]
+    Particle = [ F_1, F_2, ... F_77 | Max_Depth, Min_Samples_Split, Criterion ]
     ```
 
     The 3 hyperparameter dimensions are decoded as:
