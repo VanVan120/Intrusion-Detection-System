@@ -239,12 +239,13 @@ Follow these steps exactly to get the project running.
 
 1.  Open your **Command Prompt** (cmd) or **Terminal**.
 2.  Navigate to the folder where you want to store the project.
-3.  Clone (download) the repository and enter the directory:
+3.  Download the project as a ZIP file and extract it.
+4.  Open the extracted folder in your terminal:
     ```bash
-    git clone <your-repo-url-here>
     cd Intrusion-Detection-System
     ```
-4.  **Install the required libraries**:
+    *(If your extracted folder has a different name, use that instead.)*
+5.  **Install the required libraries**:
     ```bash
     pip install -r requirements.txt
     ```
