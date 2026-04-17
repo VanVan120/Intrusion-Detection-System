@@ -1,31 +1,55 @@
 import argparse
+from pathlib import Path
 import yaml
 from src.data_loader import IDSDataLoader
-from src.models import GASelector, PSOSelector, ABCSelector, HybridSelector, JointSelector
 from src.utils import evaluate_model, plot_pareto_front
 from src.analysis import run_analysis
 from sklearn.tree import DecisionTreeClassifier
+
+
+PROJECT_ROOT = Path(__file__).resolve().parent
+METRICS_DIR = PROJECT_ROOT / 'results' / 'results'
+PLOTS_DIR = PROJECT_ROOT / 'results' / 'plots'
 
 def load_config(config_path='config/config.yaml'):
     with open(config_path, 'r') as f:
         return yaml.safe_load(f)
 
+
+def get_optimizer_class(method):
+    try:
+        if method == 'ga':
+            from src.models.ga_selector import GASelector
+            return GASelector
+        if method == 'pso':
+            from src.models.pso_selector import PSOSelector
+            return PSOSelector
+        if method == 'abc':
+            from src.models.abc_selector import ABCSelector
+            return ABCSelector
+        if method == 'hybrid':
+            from src.models.hybrid_selector import HybridSelector
+            return HybridSelector
+        if method == 'joint':
+            from src.models.joint_selector import JointSelector
+            return JointSelector
+    except ModuleNotFoundError as exc:
+        raise ModuleNotFoundError(
+            f"Missing dependency '{exc.name}' required for '{method}' optimization. "
+            "Install project dependencies with: pip install -r requirements.txt"
+        ) from exc
+
+    raise ValueError(f"Method {method} not supported.")
+
 def run_feature_selection(method, config, df_split, show_plots=True):
     X_train, X_test, y_train, y_test, feature_names = df_split
-    
-    optimizers = {
-        'ga': GASelector,
-        'pso': PSOSelector,
-        'abc': ABCSelector,
-        'hybrid': HybridSelector,
-        'joint': JointSelector
-    }
-    
-    if method not in optimizers:
-        raise ValueError(f"Method {method} not supported. Choose from {list(optimizers.keys())}")
+
+    if method not in ['ga', 'pso', 'abc', 'hybrid', 'joint']:
+        raise ValueError("Method not supported. Choose from ['ga', 'pso', 'abc', 'hybrid', 'joint']")
         
     print(f"\n--- Running {method.upper()} Optimization ---")
-    optimizer = optimizers[method](X_train, y_train, feature_names, config)
+    optimizer_class = get_optimizer_class(method)
+    optimizer = optimizer_class(X_train, y_train, feature_names, config)
     optimizer.run()
     
     best_indices, best_names, best_fit, runtime = optimizer.get_best_features()
@@ -62,13 +86,13 @@ def run_feature_selection(method, config, df_split, show_plots=True):
     
     # Evaluate
     metrics, y_pred = evaluate_model(clf, X_test_sel, y_test, len(best_indices), runtime, method.upper(), 
-                   save_path=f"results/{method}_metrics.json")
+                   save_path=str(METRICS_DIR / f"{method}_metrics.json"))
     
     # Plot (Save only to avoid blocking loops in 'all' mode)
     # Use metrics['Accuracy'] instead of best_fit to ensure Pareto plot Y-axis is correct (Accuracy)
     plot_pareto_front(optimizer.history, len(best_names), metrics['Accuracy'], 
                       title=f"{method.upper()} Optimization History",
-                      save_path=f"results/plots/{method}_history.png",
+                      save_path=str(PLOTS_DIR / f"{method}_history.png"),
                       show=show_plots)
 
 def run_baseline(config, df_split):
@@ -89,7 +113,7 @@ def run_baseline(config, df_split):
     print(f"Baseline Training Complete. Time: {runtime:.2f}s")
     
     evaluate_model(clf, X_test, y_test, X_train.shape[1], runtime, "BASELINE", 
-                   save_path="results/baseline_metrics.json")
+                   save_path=str(METRICS_DIR / "baseline_metrics.json"))
 
 def main():
     parser = argparse.ArgumentParser(description="IDS Feature Selection Framework")

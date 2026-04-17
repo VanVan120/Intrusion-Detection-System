@@ -1,9 +1,29 @@
 import json
 import os
+from pathlib import Path
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
+
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+RESULTS_DIR = PROJECT_ROOT / 'results'
+METRICS_DIR = RESULTS_DIR / 'results'
+PLOTS_DIR = RESULTS_DIR / 'plots'
+
+
+def resolve_result_path(filename):
+    candidates = [
+        METRICS_DIR / filename,
+        RESULTS_DIR / filename,
+    ]
+
+    for path in candidates:
+        if path.exists():
+            return str(path)
+
+    return str(candidates[0])
 
 def run_analysis(show_plots=True):
     print("\n--- Running Final Performance Analysis ---")
@@ -11,18 +31,19 @@ def run_analysis(show_plots=True):
     
     # Define file paths
     result_files = {
-        'Baseline (DT)': 'results/baseline_metrics.json',
-        'Genetic Algo (GA)': 'results/ga_metrics.json',
-        'PSO': 'results/pso_metrics.json',
-        'ABC': 'results/abc_metrics.json',
-        'Hybrid PSO-GA': 'results/hybrid_metrics.json',
-        'Joint Opt': 'results/joint_metrics.json'
+        'Baseline (DT)': 'baseline_metrics.json',
+        'Genetic Algo (GA)': 'ga_metrics.json',
+        'PSO': 'pso_metrics.json',
+        'ABC': 'abc_metrics.json',
+        'Hybrid PSO-GA': 'hybrid_metrics.json',
+        'Joint Opt': 'joint_metrics.json'
     }
 
     data_list = []
 
     print("Loading results from JSON files...")
-    for method_name, file_path in result_files.items():
+    for method_name, filename in result_files.items():
+        file_path = resolve_result_path(filename)
         if os.path.exists(file_path):
             try:
                 with open(file_path, 'r') as f:
@@ -64,7 +85,7 @@ def run_analysis(show_plots=True):
     print(df_results)
     
     # Ensure directory exists for saving plots
-    os.makedirs('results/plots', exist_ok=True)
+    os.makedirs(PLOTS_DIR, exist_ok=True)
 
     # 1. General Metrics
     print("\nDisplaying General Metrics Plot...")
@@ -80,7 +101,7 @@ def run_analysis(show_plots=True):
     for container in ax.containers:
         ax.bar_label(container, fmt='%.4f', padding=4, rotation=90, fontsize=9)
     plt.tight_layout()
-    plt.savefig('results/plots/1_general_metrics.png')
+    plt.savefig(PLOTS_DIR / '1_general_metrics.png')
     if show_plots:
         plt.show()
     else:
@@ -107,7 +128,7 @@ def run_analysis(show_plots=True):
     ax1.bar_label(rects1, fmt='%.4f', padding=3, fontsize=10)
     ax2.bar_label(rects2, fmt='%.4f', padding=3, fontsize=10)
     plt.tight_layout()
-    plt.savefig('results/plots/2_security_metrics.png')
+    plt.savefig(PLOTS_DIR / '2_security_metrics.png')
     if show_plots:
         plt.show()
     else:
@@ -133,7 +154,7 @@ def run_analysis(show_plots=True):
     for i, txt in enumerate(df_results['Reduction (%)']):
         ax2.annotate(f"{txt:.1f}%", (i, txt), textcoords="offset points", xytext=(0, 12), ha='center', color='#e31a1c', fontweight='bold', bbox=dict(boxstyle="round,pad=0.3", fc="white", ec='#e31a1c', lw=1))
     plt.tight_layout()
-    plt.savefig('results/plots/3_feature_reduction.png')
+    plt.savefig(PLOTS_DIR / '3_feature_reduction.png')
     if show_plots:
         plt.show()
     else:
@@ -151,7 +172,7 @@ def run_analysis(show_plots=True):
         height = bar.get_height()
         plt.text(bar.get_x() + bar.get_width()/2., height, f'{height:.1f}s', ha='center', va='bottom', fontsize=11, fontweight='bold')
     plt.tight_layout()
-    plt.savefig('results/plots/4_runtime_comparison.png')
+    plt.savefig(PLOTS_DIR / '4_runtime_comparison.png')
     if show_plots:
         plt.show()
     else:
@@ -192,7 +213,7 @@ def run_analysis(show_plots=True):
     plt.annotate('IDEAL ZONE\n(Max Accuracy, Min Complexity)', xy=(target_x, target_y), xytext=(text_x, text_y), arrowprops=dict(facecolor='#d62728', shrink=0.05, width=3, headwidth=10, connectionstyle="arc3,rad=-0.2"), fontsize=13, fontweight='bold', color='#ce1141', bbox=dict(boxstyle="round,pad=0.3", fc="#ffeaea", ec="#ce1141", lw=2))
     plt.legend(bbox_to_anchor=(1.02, 1), loc='upper left', title='Optimization Method', fontsize=12, frameon=True, shadow=True)
     plt.tight_layout()
-    plt.savefig('results/plots/5_pareto_frontier.png')
+    plt.savefig(PLOTS_DIR / '5_pareto_frontier.png')
     if show_plots:
         plt.show()
     else:

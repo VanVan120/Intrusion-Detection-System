@@ -47,14 +47,14 @@ graph LR
 
 The following results demonstrate the system's performance using **10% of the CICIDS2017 dataset** (stratified sampling). The **Hybrid PSO-GA** method currently achieves the highest accuracy while also being the fastest optimization method.
 
-| Method | Accuracy | Precision | Recall | F1-Score | Selected Features | Reduction % | Training Time |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Baseline (Decision Tree)** | 99.82% | 99.82% | 99.82% | 99.82% | 77 (All) | 0% | ~6s |
-| **Genetic Algorithm (GA)** | 99.76% | 99.76% | 99.76% | 99.76% | 27 | 64.9% | ~359s |
-| **PSO** | 99.75% | 99.75% | 99.75% | 99.75% | 5 | 93.5% | ~138s |
-| **Artificial Bee Colony (ABC)** | 99.81% | 99.81% | 99.81% | 99.81% | 30 | 61.0% | ~405s |
-| **Hybrid PSO-GA** 🏆 | **99.84%** | **99.84%** | **99.84%** | **99.84%** | **47** | **38.9%** | **~184s** |
-| **Joint Optimization** | 99.83% | 99.83% | 99.83% | 99.83% | 30 | 61.0% | ~219s |
+| Method | Accuracy | Precision | Recall | F1-Score | TPR (Detection Rate) | FPR | Selected Features | Reduction % | Training Time |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Baseline (Decision Tree)** | 99.82% | 99.82% | 99.82% | 99.82% | 99.44% | 0.11% | 77 (All) | 0% | ~6s |
+| **Genetic Algorithm (GA)** | 99.76% | 99.76% | 99.76% | 99.76% | 99.41% | 0.11% | 27 | 64.9% | ~359s |
+| **PSO** | 99.75% | 99.75% | 99.75% | 99.75% | 99.33% | 0.16% | 5 | 93.5% | ~138s |
+| **Artificial Bee Colony (ABC)** | 99.81% | 99.81% | 99.81% | 99.81% | 99.46% | 0.12% | 30 | 61.0% | ~405s |
+| **Hybrid PSO-GA** 🏆 | **99.84%** | **99.84%** | **99.84%** | **99.84%** | **99.62%** | **0.08%** | **47** | **38.9%** | **~184s** |
+| **Joint Optimization** | 99.83% | 99.83% | 99.83% | 99.83% | 99.62% | 0.12% | 30 | 61.0% | ~219s |
 
 > **Analyst Notes**:
 > *   **PSO** offers the most aggressive feature reduction (using only **5 features** out of 77!) with 93.5% reduction while maintaining 99.75% accuracy.
@@ -187,19 +187,19 @@ After running the **Analysis** step (`python main.py --mode compare`), the syste
 ### 1. General Performance & Security
 | General Metrics | Security Metrics |
 | :---: | :---: |
-| ![General](results/results/plots/1_general_metrics.png) | ![Security](results/results/plots/2_security_metrics.png) |
+| ![General](results/plots/1_general_metrics.png) | ![Security](results/plots/2_security_metrics.png) |
 | *Comparison of Accuracy, Precision, Recall, and F1-Score* | *Detection Rate (TPR) vs. False Positive Rate (FPR)* |
 
 ### 2. Efficiency Analysis
 | Feature Reduction | Runtime Comparison |
 | :---: | :---: |
-| ![Reduction](results/results/plots/3_feature_reduction.png) | ![Runtime](results/results/plots/4_runtime_comparison.png) |
+| ![Reduction](results/plots/3_feature_reduction.png) | ![Runtime](results/plots/4_runtime_comparison.png) |
 | *Number of features selected and reduction percentage* | *Execution time (seconds) per method* |
 
 ### 3. Pareto Frontier
 | Pareto Frontier (Trade-off) |
 | :---: |
-| ![Pareto](results/results/plots/5_pareto_frontier.png) |
+| ![Pareto](results/plots/5_pareto_frontier.png) |
 | *Accuracy vs. Complexity — "Ideal Zone" is top-left (high accuracy, few features)* |
 
 Additionally, each optimization method generates its own **convergence history plot** during training (e.g., `ga_history.png`, `pso_history.png`, etc.) showing how fitness/accuracy/feature count evolve across iterations.
@@ -290,7 +290,7 @@ Run specific optimization algorithms to find the best feature subsets.
 | **Full Pipeline** | `python main.py --mode all` | Preprocess → Train all methods → Generate analysis plots. |
 
 Each training run saves:
-*   **Metrics** to `results/<method>_metrics.json` (Accuracy, Precision, Recall, F1, TPR, FPR, feature count, runtime).
+*   **Metrics** to `results/results/<method>_metrics.json` (Accuracy, Precision, Recall, F1, TPR, FPR, feature count, runtime).
 *   **Convergence plot** to `results/plots/<method>_history.png`.
 
 ### 5️⃣ Compare Results & Visualize
@@ -404,12 +404,13 @@ Intrusion-Detection-System/
 │       └── joint_selector.py   # Joint Feature + Hyperparameter Optimization
 │
 └── results/                    # 📊 Auto-generated outputs
-    ├── baseline_metrics.json
-    ├── ga_metrics.json
-    ├── pso_metrics.json
-    ├── abc_metrics.json
-    ├── hybrid_metrics.json
-    ├── joint_metrics.json
+    ├── results/                # JSON metrics files
+    │   ├── baseline_metrics.json
+    │   ├── ga_metrics.json
+    │   ├── pso_metrics.json
+    │   ├── abc_metrics.json
+    │   ├── hybrid_metrics.json
+    │   └── joint_metrics.json
     └── plots/                  # 📈 Comparison & convergence plots
         ├── 1_general_metrics.png
         ├── 2_security_metrics.png
